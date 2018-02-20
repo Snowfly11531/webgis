@@ -1,0 +1,713 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>南京林业大学-hx</title>
+<link rel="stylesheet" href="https://openlayers.org/en/v4.4.2/css/ol.css" type="text/css">
+<link rel="stylesheet" href="css/selectordie.css">
+<link rel="stylesheet" href="css/selectordie_theme_02.css">
+<script type="text/javascript" src="jquery.js"></script>
+<script src="js/ol.js" type="text/javascript"></script>
+<script src="js/proj4.js"></script>
+<script src="js/export.js"></script>
+<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
+<script src="js/selectordie.min.js"></script>
+<script type="text/javascript">
+    $(function(){
+	    $('select').selectOrDie();
+    });
+    function load(){
+		var wHeight=document.documentElement.clientHeight || document.body.clientHeight;
+        window.wHeight=wHeight+document.body.scrollTop - document.body.clientTop;
+		var width=document.documentElement.clientWidth || document.body.clientWidth;
+		window.change=document.getElementById("change");
+		var bodyroot=document.getElementById("bodyroot");
+		var neirong=document.getElementById("neirong");
+		var neirong2=document.getElementById("neirong2");
+		var neirong1=document.getElementById("neirong1");
+		var legend=document.getElementById("legend");
+		window.others=document.getElementById("others");
+		window.toolbar=document.getElementById("toolbar");
+		window.haha1=(document.documentElement.clientWidth || document.body.clientWidth)/2+300;
+        legend.style.right=parseInt((width-1000)/2)+226+"px";		
+		bodyroot.style.height=wHeight+"px";
+		neirong.style.height=(wHeight-91)+"px";
+		neirong1.style.height=(wHeight-172)+"px";
+		neirong2.style.height=(wHeight-172)+"px";
+		window.haha=(wHeight-172);
+		others.style.height=(wHeight-164-toolbar.offsetHeight)+"px";
+		$.post("identify.php",{},function(data){
+			if(data!=0){
+				$("#change").html("<div style='cursor:pointer'>"+data+"&nbsp;<a style='color:#f00' onclick='logout()' ><u>logout</u></a>&nbsp;&nbsp;&nbsp;</div>");
+			}
+		})
+	}
+	window.zhuceadd=0;
+	function zhuce(){    
+	    var wWidth=document.documentElement.clientWidth || document.body.clientWidth;
+        var zhucediv=document.getElementById("zhucediv");
+		zhucediv.style.visibility="visible";
+		var logindiv=document.getElementById("logindiv");
+		logindiv.style.visibility="hidden";
+		setTimeout(function(){
+		var intervalzhuce=setInterval(function(){
+		    if((xx>(wWidth/2+358)&&xx<(wWidth/2+358+80)
+			&&yy>22&&yy<(22+70))||(xx>(wWidth/2+358)&&xx<(wWidth/2+408)&&yy>0&&yy<22)){}
+			else {zhucediv.style.visibility="hidden";clearInterval(intervalzhuce);}
+		},10);
+		},1000);
+	}
+	function login(){
+	    var wWidth=document.documentElement.clientWidth || document.body.clientWidth;
+	    var logindiv=document.getElementById("logindiv");
+		logindiv.style.visibility="visible";
+		setTimeout(function(){
+		var intervallogin=setInterval(function(){
+		    if((xx>(wWidth/2+244)&&xx<(wWidth/2+264+logindiv.offsetWidth)
+			&&yy>22&&yy<(22+logindiv.offsetHeight))||(
+			xx>(wWidth/2+194+logindiv.offsetWidth)&&xx<(wWidth/2+264+logindiv.offsetWidth)
+			&&yy>0&&yy<22)){}
+			else {logindiv.style.visibility="hidden";clearInterval(intervallogin);}
+		},10);
+		},1000);
+	}
+	function mousePosition(ev){
+        if(ev.pageX || ev.pageY){//firefox、chrome等浏览器
+        return {x:ev.pageX,y:ev.pageY};
+        }
+        return {// IE浏览器
+            x:ev.clientX + document.body.scrollLeft - document.body.clientLeft,
+            y:ev.clientY + document.body.scrollTop - document.body.clientTop
+        };
+    }
+    function mouseMove(ev){
+        window.ev = ev || window.event;
+		window.xx=0;
+		window.yy=0;
+        var mousePos = mousePosition(ev);
+        xx = mousePos.x;
+        yy = mousePos.y;
+    }
+    document.onmousemove = mouseMove;
+</script>
+<script type="text/javascript"> 
+	function phplogin(){
+		$username=$("#name1").val();
+		$userpassword=$("#password1").val();
+		$.post("2.php",{name:$username,password:$userpassword},function(data){
+			if(data!=0){
+				alert("欢迎您！"+data);
+			    $("#change").html("<div style='cursor:pointer'>"+data+"&nbsp;<a style='color:#f00' onclick='logout()' ><u>logout</u></a>&nbsp;&nbsp;&nbsp;</div>");
+				var logindiv=document.getElementById("logindiv");
+				logindiv.style.visibility="hidden";
+			}else{
+				alert("用户名或密码错误");
+			}
+		})
+	}
+	function logout(){
+		$.post("logout.php",{},function(data){
+			location.href="webgis.html";
+		})
+	}
+	window.shou=0;
+	window.shou1=0;
+	function shouqi(){
+		if(shou==0){
+		toolbar.style.height="0px";
+		toolbar.style.overflow="hidden";
+		others.style.height=others.offsetHeight+197+"px";
+		shou=1;
+		}else{
+		toolbar.style.height="200px";
+		shou=0;
+		others.style.height=others.offsetHeight-203+"px";
+		}
+	}
+	function legend(){
+	    var legend=document.getElementById("legend");
+		if(legend.offsetHeight==155){
+		    var leheight=150;
+			var lewidth=200;
+		    var legendint1=setInterval(function(){
+		        if(legend.offsetHeight==35)clearInterval(legendint1);
+				lewidth=lewidth-6;
+		        legend.style.width=lewidth+"px";
+				leheight=leheight-5;
+			    legend.style.height=leheight+"px";
+		    },20);
+		}else{
+		    var leheight=25;
+			var lewidth=50;
+		    var legendint=setInterval(function(){			
+		        if(legend.offsetHeight==150)clearInterval(legendint);
+				lewidth=lewidth+6;
+		        legend.style.width=lewidth+"px";
+				leheight=leheight+5;
+			    legend.style.height=leheight+"px";
+		    },20);
+		}
+	}
+</script>
+
+<style type="text/css">
+    body{margin:0px;height:100%;
+		background-color:#09F}
+	div{background-color:#FFF}
+	font{
+	    color:#006e4f;
+	}
+	input{
+	     border:0px;
+		border-bottom:1px #006e4f solid;
+         color:#006e4f;
+         background:rgba(255,255,255,0);	
+         font-size:13px;
+         cursor:pointer;		 
+	}
+	button{
+		background-color:#ffffff;
+		border:1px rgba(0,0,0,0.2) solid;
+		border-radius:3px;
+	}
+	.dmArea span{  
+    white-space:nowrap;  
+    position:absolute;  
+    }
+    a{
+	    text-decoration:none;
+		color:#006e4f;
+	}
+    .rotate-north {
+     }
+    .ol-touch .rotate-north {
+        top: 80px;
+    }
+	.tooltip {
+        position: relative;
+        background: rgba(0, 0, 0, 0.5);
+        //border-radius: 4px;
+        color: white;
+        padding: 4px 8px;
+        opacity: 0.7;
+        white-space: nowrap;
+    }
+    .tooltip-measure {
+        opacity: 1;
+        font-weight: bold;
+    }
+    .tooltip-static {
+        background-color: #006e4f;
+        color: black;
+        //border: 1px solid white;
+    }
+    .tooltip-measure:before,
+    .tooltip-static:before {
+        border-top: 6px solid rgba(0, 0, 0, 0.5);
+        border-right: 6px solid transparent;
+        border-left: 6px solid transparent;
+        content: "";
+        position: absolute;
+        bottom: -6px;
+        margin-left: -7px;
+        left: 50%;
+    }
+    .tooltip-static:before {
+        border-top-color: #006e4f;
+    } 
+.select { width: 50px;padding-left:3px}
+.sod_select { font-size: 12px;width:100px}
+.sod_label{width:80px}
+.sod_list{width:100px}
+.selected active{width:100px}
+</style>
+</head>
+<body onload="load()" onresize="load();rotate.style.left=(document.documentElement.clientWidth || document.body.clientWidth)/2-494+'px';">
+<script type="text/javascript">  
+     
+var DmClass = {  
+    "Dm_H":0, //弹幕区域高度  
+    "Dm_W":0,//弹幕区域宽度  
+    "DmObj":"",//弹幕区对象  
+  
+    //初始化方法  
+    init :  function(){  
+        var _this  = this;  
+        _this.wHeight=document.documentElement.clientHeight || document.body.clientHeight;
+        _this.DmObj = $(".dmArea");  
+        _this.Dm_H =_this.wHeight-152;  
+        _this.Dm_W =850;  
+  
+        //发送弹幕方法  
+        _this.sendToDmFunc();  
+    },  
+  
+    sendToDmFunc    :       function(){  
+        var _this = this;  
+          
+        $(".sendToDm").click(function(){  
+            $.post("identify.php",{},function(data){
+            var sendCon = $('input[name="dm_con"]').val();  
+            if($.trim(sendCon) == "") {  
+                var testList = ["hello world!","不看，晕针","吾名死亡之翼","吹牛我就服你！！","哈哈哈","恭喜EDG","4396"];  
+                var _s = Math.floor(Math.random()*5);  
+                sendCon = testList[_s];  
+                //return false;  
+            }  
+            $.post("identify.php",{},function(data){});
+            //json 数据格式 
+			var sData='';
+			var R=parseInt(Math.random()*255);
+			var G=parseInt(Math.random()*255);
+			var B=parseInt(Math.random()*255);
+            if(data!=0){			
+             sData = '{"data":"<font style=\'font-size:25px;color:rgb('+R+','+G+','+B+')\'>'+data+' : '+sendCon+'</font>"}'; }
+            else{
+			 sData = '{"data":"<font style=\'font-size:25px;color:rgb('+R+','+G+','+B+')\'>游客 : '+sendCon+'</font>"}'; }			
+            //发送到sockey服务器  
+            SocketClass.websocket.send(sData);  
+            });
+  
+  
+        });  
+    },  
+  
+    //往弹幕区域添加从服务器广播过来的弹幕数据  
+    addToDm :   function(rdata){  
+        var _this = this;  
+  
+        //json转对象  
+        var newObj = eval('(' + rdata + ')');  
+  
+        //定义新的弹幕对象  
+        var newDom = $("<span></span>");  
+  
+        //随机取一个位置  
+        var p = _this.randPosition();  
+  
+        //放入弹幕内容  
+        newDom.html(newObj.data);  
+        _this.DmObj.append(newDom);  
+  
+        //设置初始位置为弹幕区的最右边  
+        newDom.css({"left":haha1-newDom.width()+"px","top":p+91+"px"});  
+  
+  
+        //当前单条弹幕位置  
+        var tR = haha1-newDom.width();
+        var haha2=haha1;
+        var haha3=haha;		
+        //定时器 20毫秒执行一次  
+        var newTimer = setInterval(function(){  
+            var wWidth=document.documentElement.clientWidth || document.body.clientWidth;
+			if(haha1!=haha2){
+			tR=tR+(haha1-haha2);
+			haha2=haha1;}
+            tR -= 2;            			
+            //当弹幕走出弹幕区将之删除，并清除当前的定时器  
+            if(tR <= (wWidth-1000)/2||tR<=0){  
+                newDom.remove();  
+                clearInterval(newTimer);  
+            } 
+			if(haha!=haha3)
+ 			p=parseInt(p*haha/haha3);  
+            newDom.css({"left":tR+"px","top":p+91+"px"});
+            haha3=haha;			
+        },20);  
+  
+    },  
+  
+    //随机获取位置  
+    randPosition    :   function(){  
+        var _this = this;  
+        var rn = Math.floor(Math.random()*(haha-28));
+        return rn;  
+    },  
+  
+}  
+  
+//sockey 服务  
+var SocketClass = {  
+    "wsServer":"ws://192.168.1.110:9502", //服务地址  
+    "websocket":"", //socket 对象  
+    init    :   function(){  
+        var _this = this;  
+  
+        //连接docket  
+        _this.socketServerInit();  
+    },  
+  
+    socketServerInit    :   function(){  
+        var _this = this;  
+        _this.websocket = new WebSocket("ws://127.0.0.1:9503");  
+  
+        //连接上socket  
+        _this.websocket.onopen = function (evt) {  
+            console.log("Connected to WebSocket server.");  
+        };  
+  
+        //socket 服务器关闭  
+        _this.websocket.onclose = function (evt) {  
+            alert("socket server closed");  
+            console.log("Disconnected");  
+        };  
+  
+        //接收socket服务器的广播数据  
+        _this.websocket.onmessage = function (evt) {  
+            console.log('Retrieved data from server: ' + evt.data);  
+  
+            //将接收到的弹幕数据调用addToDm方法 添加到弹幕区域  
+            DmClass.addToDm(evt.data);  
+        };  
+  
+        //连接错误  
+        _this.websocket.onerror = function (evt, e) {  
+            console.log('Error occured: ' + evt.data);  
+        };  
+    },  
+  
+  
+}  
+  
+//初始执行方法  
+window.onload=function(){ 
+    load(); 
+    DmClass.init();  
+    SocketClass.init();  
+}; 
+</script>
+<div id="zhucediv" style="position:absolute;z-index:20;top:22px;left:50%;margin-left:358px;width:80px;border:3px rgba(0,110,79,0.2) solid;border-radius:5px;visibility:hidden;">
+     <center><font><a href="register.html">老师注册</a><div style='width:70px;border:1px #006e4f solid;'></div><a href="register.html">学生注册</a><div style='width:70px;border:1px #006e4f solid'></div>哈哈专用</font><center>
+</div>
+<div id="logindiv" style="position:absolute;z-index:20;top:22px;left:50%;margin-left:244px;width:180px;border:3px solid rgba(0,110,79,0.2);border-radius:5px;visibility:hidden;padding:10px;">
+    <form action="webgis.php" method="post">
+    <table>
+    <tr><td><font>用户名：</font></td><td><input id="name1" type="text" style="width:100px"></td></tr>
+    <tr><td style="text-align:right"><font>密码：</font></td><td><input id="password1" type="password" style="width:100px"></td></tr>
+	<tr><td><font style="font-size:10px;color:#f00"><a>找回密码</a></font></td><td style="text-align:right"><input type="button" value="登录" id="login1" onclick="phplogin()"></td></tr>
+	</table>
+
+</div>
+<div id="bodyroot" style="margin:0 auto;width:1000px;">
+<div style="width:100%;height:90px;border-bottom:1px #006e4f solid;background-image:url(bg.png);">
+    <div style="float:left;margin-top:5px;margin-left:5px;height:80px;width:80px;background:rgba(255,255,255,0);">
+	    <img src="1.png" height=80px width=80px/>
+    </div>
+	<div style="float:left;margin-top:8px;margin-left:5px;height:77px;background:rgba(255,255,255,0);">
+	    <font style="font-size:40px;font-family:华文行楷;">南京林业大学</font>
+	    <br/>
+		<font style="font-size:20px;">&nbsp;NANJING FOREST UNIVERSITY</font>
+	</div>
+	<div style="float:right;margin-top:0px;margin-right:5px;height:80px;width:315px;background:rgba(255,255,255,0);">
+         <table width=315px>
+         <tr><td><div id="change" style="float:right;margin-right:2px;color:#006e4f">	 
+		<input type="button" value="注册" onmouseover="zhuce()"/>
+		<input type="button" value="登录" onmouseover="login()"/>
+		<input type="button" value="游客"/>
+		</div></td></tr>
+		<tr><td><font style="font-size:37px">诚朴雄伟 树木树人</font></td></tr>
+		</table>
+	</div>
+	</form>
+</div>
+<div id="neirong" style="float:left;width:800px;border-right:1px #006e4f solid;">
+    <div class="dmArea" id="neirong2" style="width:800px;border-bottom:1px #006e4f solid;padding:0px">
+	     <div id="neirong1"  style="width:800px;overflow-y:scroll;margin:0px;padding:0px"></div>
+         <!--img src="http://127.0.0.1/cgi-bin/mapserv.exe?map=/ms4w/home/msuser/mapfiles/example.map&layer=mytest&mode=map"-->
+	</div>
+	<div id="hemline" style="width:800px;;height:70px;padding-top:10px">
+	    <div style="float:left;height:60px;width:60px">
+		    <img src="assign.png" height=60px width=60px/>
+		</div>
+		<div style="float:left;height:54px;margin-top:3px;margin-left:5px">
+		    <font>联系电话:18066108519|QQ:245134041|家庭住址:***************<br/>
+			Copyright &copy; 2003-2012 njfu.edu.cn All Rights Reserved<br/>
+			版权所有 &copy; 2003-2012 南京林业大学 保留所有权利 地址：南京市龙蟠路159号
+			</font>
+		</div>
+		<div style="float:right;height:54px;width:54px;margin-right:20px;margin-top:3px">
+		    <img src="arcgis.png" height=54px width=54px>
+		</div>
+	</div>
+</div>
+
+ <div id="you" style="float:right;width:199px;z-index:999">
+	<table style="margin:5px;width:180px;border-collapse:collapse;z-index:999">
+		<tr><td style="height:25px;padding:0px;"><div onclick="shouqi()" style="cursor:pointer;background-image:url(bar.png);height:20px;width:60px;padding-top:5px;-moz-user-select: none;">Toolbar</div></td></tr>
+		<tr><td style=""><div class="select" id="toolbar" style="margin:-1px;height:200px;width:180px;border:2px solid #006e4f;">
+		     <input type="text" placeholder="say something..." name="dm_con" class="dm_con"/>
+			<button class="sendToDm">发一弹</button></br>
+			<p><button id="exportpng">export to PNG</button></p></br>
+			<form class="form-inline">
+              &nbsp;<label>量测&nbsp;</label></br>
+			<select class="myselect" id="type1" >
+			    <option value="length">Length</option>
+			    <option value="area">Area</option>
+                <option value="none" selected>None</option>				
+			</select>
+             </form>
+		</div></td></tr>
+    </table>	
+     <table style="margin:5px;width:180px;border-collapse:collapse;z-index:999">
+		<tr><td style="height:25px;padding:0px;"><div style="cursor:pointer;background-image:url(bar.png);height:20px;width:60px;padding-top:5px;-moz-user-select: none;">&nbsp;Others</div></td></tr>
+		<tr><td style=""><div id="others" style="overflow-x:scroll;overflow-y:hidden;word-break:break-all;margin:-1px;height:200px;width:180px;border:2px solid #006e4f;">信息栏</div></td></tr>
+    </table>		
+</div>
+<div style="clear:both"></div>
+</div>
+<div id="legend" style="position:absolute;width:50px;height:25px;top:125px;background:rgba(255,255,255);border:3px rgba(79,110,0,0.8) solid;border-radius:5px;overflow:hidden;">
+    <div style="height:29px;width:100%"><button style="float:right;width:50px;height:25px;border:0px;color:#006e4f;" onclick="legend()"><b>legend</b></button></div>
+	<div style="width:200px;height:0px;border:1px rgba(79,110,0,0.8) solid"></div>
+	<img src="http://127.0.0.1/cgi-bin/mapserv.exe?map=/ms4w/home/msuser/mapfiles/example.map&layer=mytest&mode=legend">
+</div>
+<script type="text/javascript">
+	window.app={};
+	window.rotateangle=0;
+	app.Rotate=function(opt_options){
+	    var options=opt_options||{};
+		var element=document.getElementById("neirong1");
+		var _this=this;
+		window.rotate=document.createElement('button');
+		rotate.innerHTML="<b>L</b>";
+		rotate.onclick=function(){
+		   rotateangle--;
+		   if(rotateangle<0)rotateangle+=8;
+		   _this.getMap().getView().setRotation(rotateangle);
+		};
+		document.body.appendChild(rotate);
+		rotate.style.cssText="position:absolute;top:160px;color:#fff;font-size:15px;background-color:rgb(0,191,243);"+
+		                     "border:3px rgb(255 255 255) solid;padding=2px;padding-left:6px;"+
+							 "padding-right:6px;opacity:0.8;border-radius:4px;";
+	    rotate.style.border="3px solid rgb(255 255 255)";
+	    rotate.style.left=(document.documentElement.clientWidth || document.body.clientWidth)/2-493+"px";
+		ol.control.Control.call(this,{
+		    element:element,
+			target:options.target
+		});
+	};
+    var view=new ol.View({
+	    projection:'EPSG:4326',
+        center:[118.85111,32.06392],
+        zoom: 13,
+	});
+	var wmsSource=new ol.source.TileWMS({
+		    url:'http://127.0.0.1/cgi-bin/mapserv.exe?map=/ms4w/home/msuser/mapfiles/example.map&server=WMS&',
+			params:{
+				'layers':'mytest',
+			},
+	});
+	var source=new ol.source.Vector({wrapX:false});
+	
+	ol.inherits(app.Rotate,ol.control.Control);
+    window.map = new ol.Map({
+        target: 'neirong1',
+		controls: ol.control.defaults().extend([
+          new ol.control.ScaleLine({
+            units: 'degrees',
+          }),
+		  new ol.control.FullScreen()
+        ]),
+        layers: [
+            new ol.layer.Tile({
+                source: new ol.source.OSM()
+            }),
+		    new ol.layer.Tile({
+		        source:wmsSource,
+		    }),
+			new ol.layer.Vector({
+				/*projection:'EPSG:4326',*/
+			    source:source, 
+				style:new ol.style.Style({
+				    fill:new ol.style.Fill({
+					    color:'rgba(0,110,79,0.5)'
+					}),
+					stroke:new ol.style.Stroke({
+					    width:2,
+					    color:'#006e4f'
+					}),
+					image:new ol.style.Circle({
+					    radius:3,
+						fill:new ol.style.Fill({
+						    color:'#006e4f'
+						})
+					})
+				})
+			})
+        ],		
+        view:view,
+    });
+    map.on('singleclick', function(evt) {
+        document.getElementById('others').innerHTML = '';
+        var viewResolution =(view.getResolution());
+        var url = wmsSource.getGetFeatureInfoUrl(
+            evt.coordinate, viewResolution, 'EPSG:4326',
+            {INFO_FORMAT:'text/html','query_layers':'mytest'});
+        if (url) {
+            document.getElementById('others').innerHTML =
+                '<iframe src="' + url + '" width="195px" height="100%" marginheight="0px" marginwidth="0px" border="none"></iframe>';
+        }
+      });
+
+    map.on('pointermove', function(evt) {
+        if (evt.dragging) {
+          return;
+        }
+        var pixel = map.getEventPixel(evt.originalEvent);
+        var hit = map.forEachLayerAtPixel(pixel, function() {
+          return true;
+        });
+        map.getTargetElement().style.cursor = hit ? 'pointer' : '';
+      });
+    document.getElementById('exportpng').addEventListener('click', function() {
+        map.once('postcompose', function(event) {
+            var canvas = event.context.canvas;
+            if (navigator.msSaveBlob) {
+                navigator.msSaveBlob(canvas.msToBlob(), 'map.png');
+            } else {
+                canvas.toBlob(function(blob) {
+                    saveAs(blob, 'map.png');
+                });
+            }
+        });
+        map.renderSync();
+    });
+	var sketch;
+	var helpTooltipElement;
+	var helpTooltip;
+	var measureTooltipElement;
+	var continuePolygonMsg='Click to continue drawing the polygon';
+	var continueLineMsg='click to continue drawing the line';
+	var pointerMoveHandler=function(evt){
+	    if(evt.dragging){
+		    return;
+		}
+		var helpMsg='click to start drawing';
+		if(sketch){
+		    var geom=(sketch.getGeometry());
+			if(geom instanceof ol.geom.Polygon){
+			    helpMsg=continuePolygonMsg;
+			}else if(geom instanceof ol.geom.LineString){
+			    helpMsg=continueLineMsg;
+			}
+		}
+		if(typeSelect1!="none")helpTooltipElement.innerHTML=helpMsg;
+		helpTooltip.setPosition(evt.coordinate);
+		helpTooltipElement.classList.remove('hidden');
+	};
+	map.on('pointermove',pointerMoveHandler);
+	map.getViewport().addEventListener('mouseout',function(){
+	    helpTooltipElement.classList.add('hidden');
+	});
+	var typeSelect1=document.getElementById('type1');
+	var draw1;
+	var formatLength=function(line){
+	    var length=ol.Sphere.getLength(line)*105244;
+		var output;
+		if(length>100){
+		    output=(Math.round(length/1000*100)/100)+' '+'km';
+		}else{
+		    output=(Math.round(length*100)/100)+' '+'m';
+		}
+		return output;
+	};
+	var formatArea=function(polygon){
+	    var area=ol.Sphere.getArea(polygon)*13333333333;
+		var output;
+		if(area>10000){
+		    output=(Math.round(area/1000000*100)/100)+' '+'km<sup>2</sup>'
+		}else{
+		    output=(Math.round(area*100)/100)+' '+'m<sup>2</sup>'
+		}
+		return output;
+	}	
+	function addInteraction1(){
+		if(typeSelect1.value=="none") return;
+	    var type=(typeSelect1.value=='area'?'Polygon':'LineString');
+		draw1=new ol.interaction.Draw({
+		    source:source,
+			type:type,
+			style: new ol.style.Style({
+                fill: new ol.style.Fill({
+                    color: 'rgba(255, 255, 255, 0.2)'
+                }),
+                stroke: new ol.style.Stroke({
+                    color: 'rgba(0, 0, 0, 0.5)',
+                    lineDash: [10, 10],
+                    width: 2
+                }),
+                image: new ol.style.Circle({
+                    radius: 5,
+                    stroke: new ol.style.Stroke({
+                        color: 'rgba(0, 0, 0, 0.7)'
+                    }),
+                    fill: new ol.style.Fill({
+                        color: 'rgba(255, 255, 255, 0.2)'
+                    })
+                })
+            })
+		});
+	    map.addInteraction(draw1);
+	    createMeasureTooltip();
+	    createHelpTooltip();
+	    var listener;
+	    draw1.on('drawstart',function(evt){
+	        sketch=evt.feature;
+		    var tooltipCoord=evt.coordinate;
+		    listener=sketch.getGeometry().on('change',function(evt){
+			    var geom=evt.target;
+			    var output;
+			    if(geom instanceof ol.geom.Polygon){
+				    output=formatArea(geom);
+			        tooltipCoord=geom.getInteriorPoint().getCoordinates();				
+			    }else if(geom instanceof ol.geom.LineString){
+				    output=formatLength(geom);
+				    tooltipCoord=geom.getLastCoordinate();
+			    }
+			    measureTooltipElement.innerHTML=output;
+			    measureTooltip.setPosition(tooltipCoord);
+		    });
+	    },this);
+	    draw1.on('drawend',function(){
+		    measureTooltipElement.className='tooltip tooltip-static';
+		    //neasureTooltip.setOffset([0,-7]);
+		    sketch=null;
+		    measureTooltipElement=null;
+		    createMeasureTooltip();
+		    ol.Observable.unByKey(listener);
+	    },this);
+	}
+    function createHelpTooltip() {
+        if (helpTooltipElement) {
+            helpTooltipElement.parentNode.removeChild(helpTooltipElement);
+        }
+        helpTooltipElement = document.createElement('div');
+        helpTooltipElement.className = 'tooltip hidden';
+        helpTooltip = new ol.Overlay({
+            element: helpTooltipElement,
+            offset: [15, 0],
+            positioning: 'center-left'
+        });
+        map.addOverlay(helpTooltip);
+    }
+    function createMeasureTooltip() {
+        if (measureTooltipElement) {
+            measureTooltipElement.parentNode.removeChild(measureTooltipElement);
+        }
+        measureTooltipElement = document.createElement('div');
+        measureTooltipElement.className = 'tooltip tooltip-measure';
+        measureTooltip = new ol.Overlay({
+            element: measureTooltipElement,
+            offset: [0, -15],
+            positioning: 'bottom-center'
+        });
+        map.addOverlay(measureTooltip);
+    }
+    typeSelect1.onchange = function() {
+        map.removeInteraction(draw1);
+        addInteraction1();
+    };
+    addInteraction1();	
+	map.addControl(new app.Rotate());
+</script>
+</body>
+</html>
